@@ -1,0 +1,488 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="clr-namespace:Playground.ViewModels;assembly=Playground"
+        xmlns:controls="clr-namespace:Playground.CustomControls;assembly=Playground"
+        xmlns:constants="clr-namespace:Playground.Constants;assembly=Playground"
+        mc:Ignorable="d"
+		MinWidth="920"
+		MinHeight="565"
+        x:Class="Playground.SerialReadSocketSend.SerialWindow"
+        Title="Playground">
+
+	<ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+		<Grid Margin="8">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1.6*" />
+				<ColumnDefinition Width=".4*" />
+				<ColumnDefinition Width=".4*" />
+				<ColumnDefinition Width=".4*" />
+				<ColumnDefinition Width=".8*" />
+			</Grid.ColumnDefinitions>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+
+			<StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Stretch" Grid.Row="0" Margin="0,0,0,16" VerticalAlignment="Stretch">
+				<Label Content="Basic" FontWeight="Bold" FontSize="16" Margin="0,0,0,4"/>
+				<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="4" Height="170">
+					<Grid Margin="8,8,0,0" VerticalAlignment="Center">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+						
+						<Label 
+							Content="_Port:" 
+							Grid.Column="0" 
+							VerticalAlignment="Center" 
+							Grid.Row="0" 
+							FontSize="12"/>
+						
+						<ComboBox 
+							Name="serialPortCombobox" 
+							IsEnabled="{Binding SerialInputsEnabled}" 
+							PlaceholderText="Select COM port" 
+							Grid.Column="2" 
+							SelectedItem="{Binding SelectedComPort}" 
+							Items="{Binding ComPorts}" 
+							Width="140" 
+							HorizontalContentAlignment="Stretch" 
+							Margin="16,0,0,0" 
+							Grid.Row="0" 
+							FontSize="12"/>
+
+						
+						
+						<Label 
+							Content="_Baud:" 
+							Grid.Column="0" 
+							Grid.Row="1" 
+							VerticalAlignment="Center" 
+							Margin="0,16,0,0" 
+							FontSize="12"/>
+						
+						<ComboBox 
+							Name="baudRateCombobox" 
+							IsEnabled="{Binding SerialInputsEnabled}" 
+							PlaceholderText="Select baud rate" 
+							Grid.Row="1" 
+							Width="140" 
+							Grid.Column="2" 
+							Margin="16,16,0,0" 
+							FontSize="12"
+							ToolTip.Tip="{Binding SelectedBaudRate, StringFormat=Baud rate of {0} selected for use with serial port}"
+							SelectedItem="{Binding SelectedBaudRate}" 
+							Items="{Binding BaudRates}"/>
+
+						<Label 
+							Content="_Databits:" 
+							Grid.Column="0" 
+							Grid.Row="2" 
+							VerticalAlignment="Center" 
+							Margin="0,16,0,0" 
+							FontSize="12"/>
+						
+						<ComboBox 
+							Name="databitsCombobox"
+							IsEnabled="{Binding SerialInputsEnabled}" 
+							PlaceholderText="Select databits" 
+							Items="{Binding DataBits}" 
+							SelectedItem="{Binding SelectedDataBits}" 
+							Grid.Row="2"
+							Width="140" 
+							Grid.Column="2" 
+							Margin="16,16,0,0" 
+							FontSize="12"
+                            ToolTip.Tip="{Binding SelectedDataBits, StringFormat=Databits of {0} selected for use with serial port}"/>
+
+						<Label 
+							Content="_Stop bits:" 
+							Grid.Column="0" 
+							Grid.Row="3" 
+							VerticalAlignment="Center" 
+							Margin="0,16,0,8" 
+							FontSize="12"/>
+						
+						<ComboBox 
+							Name="stopBitsCombobox"
+							IsEnabled="{Binding SerialInputsEnabled}" 
+							PlaceholderText="Select stop bits" 
+							Items="{Binding StopBits}" 
+							SelectedItem="{Binding SelectedStopBits}" 
+							Grid.Row="3" 
+							Width="140" 
+							Grid.Column="2" 
+							Margin="16,16,0,8" 
+							FontSize="12"
+                            ToolTip.Tip="{Binding SelectedStopBits, StringFormat=Stop bits of {0} selected for use with serial port}"/>
+					</Grid>
+				</Border>
+			</StackPanel>
+
+			<StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Stretch" Grid.Row="0" Margin="0,0,0,16" VerticalAlignment="Stretch">
+				<Label Content="Parity" FontWeight="Bold" FontSize="16" Margin="0,0,0,4"/>
+				<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="4" Height="170">
+					<Grid Margin="8,8,0,0">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+
+						<RadioButton IsEnabled="{Binding SerialInputsEnabled}" GroupName="Parity" Content="Even" Grid.Row="0" FontSize="12" Margin="0,0,0,8" IsChecked="{Binding EvenParityChecked}"/>
+						<RadioButton IsEnabled="{Binding SerialInputsEnabled}" GroupName="Parity" Content="Odd" Grid.Row="1" FontSize="12" Margin="0,0,0,8" IsChecked="{Binding OddParityChecked}"/>
+						<RadioButton IsEnabled="{Binding SerialInputsEnabled}" GroupName="Parity" Content="None" Grid.Row="2" FontSize="12" Margin="0,0,0,8" IsChecked="{Binding NoneParityChecked}"/>
+					</Grid>
+				</Border>
+			</StackPanel>
+
+			<StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Stretch" Grid.Row="0" Margin="0,0,0,16" VerticalAlignment="Stretch">
+				<Label Content="Flow control" FontWeight="Bold" FontSize="16" Margin="0,0,0,4"/>
+				<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="4" Height="170">
+					<Grid Margin="8,8,0,0">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+
+						<RadioButton IsEnabled="{Binding SerialInputsEnabled}" GroupName="FlowControl" IsChecked="{Binding CtsRtsSelected}" Content="cts/rts" Grid.Row="0" FontSize="12" Margin="0,0,0,8"/>
+						<RadioButton IsEnabled="{Binding SerialInputsEnabled}" GroupName="FlowControl" IsChecked="{Binding DsrDtrSelected}" Content="dsr/dtr" Grid.Row="1" FontSize="12" Margin="0,0,0,8"/>
+						<RadioButton IsEnabled="{Binding SerialInputsEnabled}" GroupName="FlowControl" IsChecked="{Binding XonXoffSelected}" Content="xon/xoff" Grid.Row="2" FontSize="12" Margin="0,0,0,8"/>
+						<RadioButton IsEnabled="{Binding SerialInputsEnabled}" GroupName="FlowControl" IsChecked="{Binding NoneSelected}" Content="none" Grid.Row="3" FontSize="12" Margin="0,0,0,8"/>
+					</Grid>
+				</Border>
+			</StackPanel>
+
+			<StackPanel Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="0,0,0,8">
+				<Label Content="Scale string settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,4"/>
+				<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="4" Height="170">
+					<Grid Margin="8,8,0,0">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="6*" />
+							<ColumnDefinition Width="3*" />
+						</Grid.ColumnDefinitions>
+
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+
+						<Label Content="Weight start position" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,8"/>
+
+						<NumericUpDown
+							Name="weightStartSpinner"
+							Value="{Binding WeightStartPosition}"
+							Grid.Column="1"
+							Grid.Row="0"
+							VerticalContentAlignment="Center"
+							Margin="0,0,0,8"
+							Minimum="0"
+                            ToolTip.Tip="{x:Static constants:TooltipConstants.WeightStartPosition}"/>
+
+						<Label Content="Weight end position" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0,0,0,8"/>
+
+						<NumericUpDown
+							Name="weightEndSpinner"
+							Value="{Binding WeightEndPosition}"
+							Grid.Column="1"
+							Grid.Row="1"
+							VerticalContentAlignment="Center"
+							Margin="0,0,0,8"
+							Minimum="{Binding WeightStartPosition}"
+                            ToolTip.Tip="{x:Static constants:TooltipConstants.WeightEndPosition}"/>
+
+						<Grid Grid.ColumnSpan="2" Grid.Row="2" Margin="0,0,0,8">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width=".5*"/>
+								<ColumnDefinition Width="1.5*"/>
+								<ColumnDefinition Width="1.75*"/>
+								<ColumnDefinition Width="1.5*"/>
+							</Grid.ColumnDefinitions>
+							
+							<CheckBox VerticalAlignment="Center" IsChecked="{Binding StringRequiredLengthActive}" Grid.Column="0" ToolTip.Tip="{x:Static constants:TooltipConstants.RequiredLengthToggle}"/>
+							<TextBlock Text="String must be" VerticalAlignment="Center" Grid.Column="1" TextWrapping="Wrap"/>
+
+							<NumericUpDown
+								Name="requiredLengthSpinner"
+								Value="{Binding ScaleStringRequiredLength}"
+								VerticalContentAlignment="Center"
+								IsEnabled="{Binding StringRequiredLengthActive}"
+								Minimum="1"
+								Grid.Column="2"
+                                ToolTip.Tip="{x:Static constants:TooltipConstants.RequiredLength}"/>
+
+							<TextBlock Text="characters long" VerticalAlignment="Center" TextWrapping="Wrap" Grid.Column="3" />
+						</Grid>
+					</Grid>
+				</Border>
+			</StackPanel>
+
+			<StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Stretch" Grid.Row="1" Margin="0,0,0,16" VerticalAlignment="Stretch">
+				<Label Content="Scale stability" FontWeight="Bold" FontSize="16" Margin="0,0,0,4"/>
+				<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="4" Height="200">
+					<Grid Margin="8,8,0,0" VerticalAlignment="Center">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+
+						<RadioButton 
+							IsChecked="{Binding StabilityIndicatorActive}" 
+							GroupName="ScaleStability" 
+							Grid.Row="0" Grid.Column="0" 
+							Content="Stability indicator" 
+							FontSize="12" 
+							Margin="0,0,0,8"
+							ToolTip.Tip="{Binding StabilityIndicatorTooltip}"/>
+						
+						<RadioButton 
+							IsChecked="{Binding SequenceOfIdenticalReadingsActive}" 
+							GroupName="ScaleStability" 
+							Grid.Row="0" 
+							Grid.Column="1" 
+							Content="Sequence of identical readings"
+							FontSize="12" 
+							Margin="8,0,0,8"
+							ToolTip.Tip="{Binding IdenticalReadingsTooltip}"/>
+
+						<StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" Margin="0,0,0,8">
+							<Label Content="Character snippet" FontSize="12"/>
+							<TextBox
+                                Name="stabilityIndicatorTextbox"
+                                IsEnabled="{Binding StabilityIndicatorActive}"
+                                Text="{Binding StabilityIndicatorSnippet}"
+                                FontSize="12"
+                                TextWrapping="Wrap"
+                                ToolTip.Tip="{x:Static constants:TooltipConstants.CharacterSnippet}"/>
+						</StackPanel>
+
+						<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="8,0,0,8">
+							<Label Content="Number of readings" VerticalAlignment="Center" Margin="4,0,0,0" FontSize="12"/>
+
+							<NumericUpDown
+								Name="sequentialReadingsSpinner"
+								IsEnabled="{Binding SequenceOfIdenticalReadingsActive}"
+								Value="{Binding NumberOfIdenticalReadings}"
+								FontSize="12"
+								Minimum="1"
+								VerticalContentAlignment="Center"
+                                ToolTip.Tip="{x:Static constants:TooltipConstants.NumberOfReadings}"/>
+						</StackPanel>
+
+						<StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Margin="0,0,0,8">
+							<Label Content="Starts at" FontSize="12" VerticalAlignment="Center"/>
+
+							<NumericUpDown
+								Name="stabilityIndicatorStartSpinner"
+								IsEnabled="{Binding StabilityIndicatorActive}"
+								Value="{Binding StabilityIndicatorStartingPosition}"
+								Minimum="1"
+								VerticalContentAlignment="Center"
+								FontSize="12"
+                                ToolTip.Tip="{x:Static constants:TooltipConstants.StabilityIndicatorStart}"/>
+						</StackPanel>
+					</Grid>
+				</Border>
+			</StackPanel>
+
+
+			<StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Margin="0,0,0,16" VerticalAlignment="Stretch">
+				<Label Content="Serial connect and socket connection" FontWeight="Bold" FontSize="16" Margin="0,0,0,4"/>
+				<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="4" Height="200">
+					<Grid Margin="8,8,0,0" VerticalAlignment="Center">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1.75*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="1.5*" />
+							<RowDefinition Height="1.75*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="2.5*" />
+							<ColumnDefinition Width="3*" />
+						</Grid.ColumnDefinitions>
+						
+						<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+							<TextBlock
+								Text="Timeout:"
+								FontSize="14"
+								VerticalAlignment="Center"
+								Margin="0,0,8,0"
+								TextWrapping="Wrap"/>
+				
+							<NumericUpDown 
+								Value="{Binding TimeoutMilliseconds}"
+								VerticalAlignment="Center"
+								VerticalContentAlignment="Center"
+								IsEnabled="{Binding SerialInputsEnabled}"
+								Minimum="500"
+								Margin="0,0,0,8"
+								ToolTip.Tip="{Binding TimeoutMilliseconds, StringFormat=If {0}ms has passed without a value received from the serial port. We consider it a time out.}" />
+							<TextBlock Text="ms" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap"/>
+				
+						</StackPanel>
+						
+						<Button
+							Name="ListenSerialPortButton"
+							IsEnabled="True"
+							Command="{Binding ListenOnSerialPortCommand}"
+							Margin="0,0,0,8"
+							Grid.Row="0"
+							Grid.Column="0"
+							ToolTip.Tip="Listen for incoming readings from specified serial port.">
+							<Button.Content>
+								<StackPanel Orientation="Vertical">
+									<TextBlock Text="{Binding ListenToSerialButtonText}" TextWrapping="Wrap"/>
+									<ProgressBar IsIndeterminate="True" IsVisible="{Binding ListeningOnSerialPort}" Margin="4" VerticalAlignment="Bottom" Height="4"/>
+								</StackPanel>
+							</Button.Content>
+						</Button>
+
+						<TextBlock
+							Text="{Binding ListenToSerialCaptionText}"
+							Grid.Row="1"
+							Grid.Column="0"
+							Grid.ColumnSpan="2"
+							Margin="0,0,0,8"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							TextWrapping="Wrap"/>
+
+						<TextBlock
+							Text="Port to broadcast values on: "
+							VerticalAlignment="Center"
+							FontSize="14"
+							Grid.Row="2"
+							Grid.Column="0"
+							Margin="0,0,0,8"
+							TextWrapping="Wrap"/>
+
+						<NumericUpDown
+							Name="broadcastPortSpinner"
+							Value="{Binding Port}"
+							IsEnabled="{Binding BroadcastInputsEnabled}"
+							VerticalAlignment="Center"
+							VerticalContentAlignment="Center"
+							Minimum="1"
+							Grid.Row="2"
+							Grid.Column="1"
+							Margin="0,0,0,8"
+							ToolTip.Tip="Port for socket connection to broadcast values to."/>
+
+						<Button
+							IsEnabled="{Binding ListeningOnSerialPort}"
+							Command="{Binding BroadcastSerialValuesCommand}"
+							Margin="0,0,0,8"
+							Grid.Row="3"
+							Grid.Column="0"
+							ToolTip.Tip="Broadcast values from serial port to socket connection.">
+							<Button.Content>
+								<StackPanel Orientation="Vertical">
+									<TextBlock Text="{Binding SocketConnectionButtonText}" TextWrapping="Wrap"/>
+									<ProgressBar IsIndeterminate="True" IsVisible="{Binding BroadcastingSerialValues}" Margin="4" VerticalAlignment="Bottom" Height="4"/>
+								</StackPanel>
+							</Button.Content>
+						</Button>
+
+						<TextBlock
+							Name="socketConnectionCaptionTextblock"
+							Text="{Binding SocketConnectionCaptionText}"
+							Margin="8,0,0,8"
+							Grid.Row="3"
+							Grid.Column="1"
+							VerticalAlignment="Center"
+							TextWrapping="Wrap"/>
+
+					</Grid>
+				</Border>
+			</StackPanel>
+
+			<TextBlock 
+				Text="{Binding LastReceivedValue, StringFormat=Last value received: {0}}" 
+				FontSize="14" 
+				Margin="0,0,0,16" 
+				Grid.Row="2" 
+				Grid.Column="0" 
+				HorizontalAlignment="Left" 
+				VerticalAlignment="Center"
+				TextWrapping="Wrap"/>
+			
+			<TextBlock 
+				Text="{Binding LastReceivedValueTimestamp, StringFormat=Last value received at: {0:dd/MM/yyyy hh:mm:ss.fff}}" 
+				FontSize="14" 
+				Margin="0,12,0,16" 
+				Grid.Row="3" 
+				Grid.Column="0" 
+				HorizontalAlignment="Left" 
+				VerticalAlignment="Center"
+				TextWrapping="Wrap"/>
+			
+			<TextBlock 
+				Text="{Binding LastProcessedValue, StringFormat=Value after processing: {0}}" 
+				FontSize="14" 
+				Margin="0,0,0,16" 
+				Grid.Row="2" 
+				Grid.Column="1" 
+				Grid.ColumnSpan="3" 
+				HorizontalAlignment="Left" 
+				VerticalAlignment="Center"
+				TextWrapping="Wrap"/>
+			
+			<Button
+                Name="showSocketButton"
+                Grid.Row="3"
+                Grid.Column="1"
+                Command="{Binding ShowSocketQRCodeCommand}"
+                Width="200"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left">
+				<Button.Content>
+					<StackPanel Orientation="Horizontal">
+						<Image Source="/Assets/qrcode.png" Height="24" Width="24" Margin="0,0,16,0" HorizontalAlignment="Left"/>
+						<TextBlock
+                            Text="Show QR Code"
+                            VerticalAlignment="Center"
+                            TextWrapping="Wrap"
+                            HorizontalAlignment="Left"
+                            FontSize="14"
+                            ToolTip.Tip="{x:Static constants:TooltipConstants.ShowQRCode}"/>
+					</StackPanel>
+				</Button.Content>
+			</Button>
+		</Grid>
+	</ScrollViewer>
+
+
+
+</Window>
