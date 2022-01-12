@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Playground.Views;
 using Avalonia.Controls;
+using Avalonia.Threading;
 
 namespace Playground
 {
     internal static partial class Extensions
     {
-
+        internal static void RunOnMainThread(Action action)    => Dispatcher.UIThread.Post(action);
+        internal static void RunOnMainThread(Func<Task> task)  => Dispatcher.UIThread.Post(async () => await task());
 
         //These methods were for use with Console-based farFulcrum
         

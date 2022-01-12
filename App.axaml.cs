@@ -1,7 +1,13 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Playground.Logging;
+using Playground.ViewModels;
 using Playground.Views;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Playground
 {
@@ -21,5 +27,7 @@ namespace Playground
 
             base.OnFrameworkInitializationCompleted();
         }
+        
+        public static List<Window> Windows { get; set; } = new();
     }
 }

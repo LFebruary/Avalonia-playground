@@ -1,13 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
-using Playground.ViewModels;
 using System;
 
 namespace Playground.SerialReadSocketSend
 {
-    public partial class SerialWindow : ReactiveWindow<SerialWindowVM>
+    public partial class SerialWindow : BaseWindow<SerialWindowVM>
     {
         public SerialWindow()
         {
@@ -15,6 +13,7 @@ namespace Playground.SerialReadSocketSend
 #if DEBUG
             this.AttachDevTools();
 #endif
+
             DataContext = new SerialWindowVM(this);
         }
 
@@ -44,5 +43,6 @@ namespace Playground.SerialReadSocketSend
         internal void FocusStartingPosition()           => FindControlNullSafe<NumericUpDown>("stabilityIndicatorStartSpinner").Focus();
         internal void FocusStopBitsPicker()             => FindControlNullSafe<ComboBox>("stopBitsCombobox").IsDropDownOpen = true;
         #endregion
+
     }
 }

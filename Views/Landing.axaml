@@ -5,5 +5,14 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Playground.Views.Landing"
         Title="Landing">
-  Welcome to Avalonia!
+	<StackPanel Orientation="Vertical">
+		<TabControl SelectedIndex="{Binding SelectedTabIndex}">
+			<TabItem Header="Tab1" >
+				<Button Content="Create serial window" Command="{Binding CreateSerialWindow}"/>
+			</TabItem>
+			<TabItem Header="Tab2" />
+			<TabItem Header="Tab3" />
+		</TabControl>
+		<ContentControl Content="{Binding Content}"/>
+	</StackPanel>
 </Window>

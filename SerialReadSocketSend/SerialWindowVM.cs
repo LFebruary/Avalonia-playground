@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using static Playground.CustomSettings;
 using System.IO.Ports;
-using Playground.Views;
 using System.Threading.Tasks;
 using System.Collections.Specialized;
 using Playground.Constants;
 using QRCoder;
 using System.Globalization;
 using System.ComponentModel;
-using Playground.SerialReadSocketSend;
 using Playground.ViewModels;
 
 namespace Playground.SerialReadSocketSend
