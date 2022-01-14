@@ -7,9 +7,9 @@ using System;
 
 namespace Playground.Views
 {
-    public partial class Landing : BaseWindow<LandingVM>
+    public partial class LandingWindow : BaseWindow<LandingVM>
     {
-        public Landing()
+        public LandingWindow()
         {
             InitializeComponent();
 #if DEBUG
@@ -26,35 +26,24 @@ namespace Playground.Views
 
     public class LandingVM : BaseViewModel
     {
-        public LandingVM(Landing view) : base(view)
+        public LandingVM(LandingWindow view) : base(view)
         {
-            SelectedTabIndex = 0;
-        }
 
-        protected override void OnOpened(object? sender, EventArgs e)
-        {
-            base.OnOpened(sender, e);
-
-            OpenWindow<SerialWindow>();
-        }
-
-        private int _selectedTabIndex;
-        public int SelectedTabIndex
-        {
-            get => _selectedTabIndex;
-            set => SetProperty(ref _selectedTabIndex, value);
         }
 
         private object? _content;
-        public object Content
+        public object? Content
         {
-            get => _content ?? "";
+            get => _content;
             set => SetProperty(ref _content, value);
         }
 
-        public static void CreateSerialWindow()
+        public static void OpenWindowCommand(object? windowType)
         {
-            OpenWindow<SerialWindow>();
+            if (windowType is not null and Type castedType)
+            {
+                OpenWindow(castedType);
+            }
         }
     }
 }

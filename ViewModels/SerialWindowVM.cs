@@ -9,9 +9,10 @@ using Playground.Constants;
 using QRCoder;
 using System.Globalization;
 using System.ComponentModel;
-using Playground.ViewModels;
+using Playground.Views;
+using Playground.SerialReadSocketSend;
 
-namespace Playground.SerialReadSocketSend
+namespace Playground.ViewModels
 {
     public class SerialWindowVM : BaseViewModel
     {

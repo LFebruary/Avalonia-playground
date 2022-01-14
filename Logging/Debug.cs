@@ -14,7 +14,7 @@ namespace Playground.Logging
         /// <param name="member">Member that calls the Debug method</param>
         /// <param name="line">Line number in file from where the Debug method is called</param>
         [Conditional("DEBUG")]
-        internal static void WriteLine(object debugMessage, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        internal static void WriteLine(object? debugMessage, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
         {
             System.Diagnostics.Debug.WriteLine($"{Path.GetFileName(file)} - {member}({line}): {debugMessage}");
         }

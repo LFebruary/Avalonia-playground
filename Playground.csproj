@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
@@ -33,8 +33,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Update="SerialReadSocketSend\SerialWindow.axaml.cs">
+    <Compile Update="Views\SerialWindow.axaml.cs">
       <DependentUpon>SerialWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Networking.axaml.cs">
+      <DependentUpon>Networking.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

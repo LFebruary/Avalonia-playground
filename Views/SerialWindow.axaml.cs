@@ -1,9 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Playground.ViewModels;
 using System;
 
-namespace Playground.SerialReadSocketSend
+namespace Playground.Views
 {
     public partial class SerialWindow : BaseWindow<SerialWindowVM>
     {
@@ -22,14 +23,6 @@ namespace Playground.SerialReadSocketSend
             AvaloniaXamlLoader.Load(this); 
         }
 
-        internal T FindControlNullSafe<T>(string name) where T : class, IControl, new()
-        {
-            Contract.Requires<ArgumentNullException>(this != null);
-            Contract.Requires<ArgumentNullException>(name != null);
-
-            T? foundControl = this.FindControl<T>(name);
-            return foundControl ?? new T();
-        }
 
         #region Focus methods
         internal void FocusBaudRatePicker()             => FindControlNullSafe<ComboBox>("baudRateCombobox").IsDropDownOpen = true;

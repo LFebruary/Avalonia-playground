@@ -8,7 +8,7 @@
         mc:Ignorable="d"
 		MinWidth="920"
 		MinHeight="565"
-        x:Class="Playground.SerialReadSocketSend.SerialWindow"
+        x:Class="Playground.Views.SerialWindow"
         Title="Playground">
 
 	<ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">

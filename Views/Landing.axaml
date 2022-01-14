@@ -3,16 +3,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="Playground.Views.Landing"
+		xmlns:views="clr-namespace:Playground.Views;assembly=Playground"
+        x:Class="Playground.Views.LandingWindow"
         Title="Landing">
-	<StackPanel Orientation="Vertical">
-		<TabControl SelectedIndex="{Binding SelectedTabIndex}">
-			<TabItem Header="Tab1" >
-				<Button Content="Create serial window" Command="{Binding CreateSerialWindow}"/>
-			</TabItem>
-			<TabItem Header="Tab2" />
-			<TabItem Header="Tab3" />
-		</TabControl>
-		<ContentControl Content="{Binding Content}"/>
-	</StackPanel>
+	<ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+		<Grid Margin="16">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			
+			<Button Grid.Column="0" Margin="8" Grid.Row="0" Content="Open Serial Window" Command="{Binding OpenWindowCommand}" CommandParameter="{x:Type views:SerialWindow}"/>
+			<Button Grid.Column="1" Margin="8" Grid.Row="0" Content="Open Networking Window" Command="{Binding OpenWindowCommand}" CommandParameter="{x:Type views:NetworkingWindow}"/>
+		</Grid>
+	</ScrollViewer>
 </Window>

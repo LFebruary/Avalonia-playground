@@ -8,6 +8,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Playground.Views.MessageBox;
 using static Playground.Views.ViewTools;
+using static Playground.Extensions;
+using System.Collections.Generic;
+using Playground.Logging;
+using System.Linq;
 
 namespace Playground.ViewModels
 {
@@ -29,7 +33,15 @@ namespace Playground.ViewModels
             _parentView.Opened          += OnOpened;
         }
 
-        protected static void OpenWindow<T>() where T: Window, new() => OpenNewOrRestoreWindow<T>();
+        protected static void OpenWindow<T>() where T: Window, new() => RunOnMainThread(() => OpenNewOrRestoreWindow<T>());
+
+        protected static void OpenWindow(Type windowType)
+        {
+            if (_windows.Select(i => i.type).Contains(windowType))
+            {
+                RunOnMainThread(() => _windows.First(i => i.type == windowType).openWindow());
+            }
+        }
 
         protected virtual void OnOpened(object? sender, EventArgs e)
         {

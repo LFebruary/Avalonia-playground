@@ -10,6 +10,13 @@ namespace Playground
 {
     internal static partial class Extensions
     {
+        internal static string FirstCharToUpper(this string input) => input switch
+        {
+            null    => throw new ArgumentNullException(nameof(input)),
+            ""      => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
+            _       => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
+        };
+
         internal static void RunOnMainThread(Action action)    => Dispatcher.UIThread.Post(action);
         internal static void RunOnMainThread(Func<Task> task)  => Dispatcher.UIThread.Post(async () => await task());
 
