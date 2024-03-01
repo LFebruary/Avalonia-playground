@@ -51,6 +51,7 @@
 							Grid.Row="0" 
 							FontSize="12"/>
 						
+						<!-- 
 						<ComboBox 
 							Name="serialPortCombobox" 
 							IsEnabled="{Binding SerialInputsEnabled}" 
@@ -63,9 +64,11 @@
 							Margin="16,0,0,0" 
 							Grid.Row="0" 
 							FontSize="12"/>
+						-->
 
-						
-						
+
+
+
 						<Label 
 							Content="_Baud:" 
 							Grid.Column="0" 
@@ -74,6 +77,7 @@
 							Margin="0,16,0,0" 
 							FontSize="12"/>
 						
+						<!-- 
 						<ComboBox 
 							Name="baudRateCombobox" 
 							IsEnabled="{Binding SerialInputsEnabled}" 
@@ -86,6 +90,7 @@
 							ToolTip.Tip="{Binding SelectedBaudRate, StringFormat=Baud rate of {0} selected for use with serial port}"
 							SelectedItem="{Binding SelectedBaudRate}" 
 							Items="{Binding BaudRates}"/>
+						-->
 
 						<Label 
 							Content="_Databits:" 
@@ -95,6 +100,7 @@
 							Margin="0,16,0,0" 
 							FontSize="12"/>
 						
+						<!-- 
 						<ComboBox 
 							Name="databitsCombobox"
 							IsEnabled="{Binding SerialInputsEnabled}" 
@@ -106,7 +112,8 @@
 							Grid.Column="2" 
 							Margin="16,16,0,0" 
 							FontSize="12"
-                            ToolTip.Tip="{Binding SelectedDataBits, StringFormat=Databits of {0} selected for use with serial port}"/>
+                            ToolTip.Tip="{Binding SelectedDataBits, StringFormat=Databits of {0} selected for use with serial port}"/
+							-->
 
 						<Label 
 							Content="_Stop bits:" 
@@ -116,6 +123,7 @@
 							Margin="0,16,0,8" 
 							FontSize="12"/>
 						
+						<!-- 
 						<ComboBox 
 							Name="stopBitsCombobox"
 							IsEnabled="{Binding SerialInputsEnabled}" 
@@ -128,6 +136,8 @@
 							Margin="16,16,0,8" 
 							FontSize="12"
                             ToolTip.Tip="{Binding SelectedStopBits, StringFormat=Stop bits of {0} selected for use with serial port}"/>
+						-->
+						
 					</Grid>
 				</Border>
 			</StackPanel>

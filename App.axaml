@@ -2,15 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Playground"
 			 xmlns:properties="using:Playground.Properties"
-             x:Class="Playground.App">
+             x:Class="Playground.App"
+			 RequestedThemeVariant="Dark">
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
-
-    <Application.Styles>
-        <FluentTheme Mode="Dark"/>
-		<StyleInclude Source="avares://Avalonia.Themes.Fluent/Accents/BaseDark.xaml"/>
-        <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseDark.xaml"/>
-        <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
-    </Application.Styles>
 </Application>

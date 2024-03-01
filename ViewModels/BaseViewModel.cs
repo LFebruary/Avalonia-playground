@@ -1,17 +1,18 @@
+// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
 using Avalonia.Controls;
-using Avalonia.Threading;
 using Playground.Views;
 using ReactiveUI;
 using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using static Playground.Extensions;
 using static Playground.Views.MessageBox;
 using static Playground.Views.ViewTools;
-using static Playground.Extensions;
-using System.Collections.Generic;
-using Playground.Logging;
-using System.Linq;
 
 namespace Playground.ViewModels
 {
@@ -23,17 +24,17 @@ namespace Playground.ViewModels
             _parentView = parentView;
             _isOpen = true;
 
-            _parentView.Closing         -= OnClosing;
-            _parentView.Closing         += OnClosing;
+            _parentView.Closing -= OnClosing;
+            _parentView.Closing += OnClosing;
 
-            _parentView.Closed          -= OnClosed;
-            _parentView.Closed          += OnClosed;
-            
-            _parentView.Opened          -= OnOpened;
-            _parentView.Opened          += OnOpened;
+            _parentView.Closed -= OnClosed;
+            _parentView.Closed += OnClosed;
+
+            _parentView.Opened -= OnOpened;
+            _parentView.Opened += OnOpened;
         }
 
-        protected static void OpenWindow<T>() where T: Window, new() => RunOnMainThread(() => OpenNewOrRestoreWindow<T>());
+        protected static void OpenWindow<T>() where T : Window, new() => RunOnMainThread(() => OpenNewOrRestoreWindow<T>());
 
         protected static void OpenWindow(Type windowType)
         {
@@ -62,13 +63,13 @@ namespace Playground.ViewModels
 
         #region Fields
         internal Window _parentView;
-        internal bool   _isOpen;
+        internal bool _isOpen;
 
         internal MessageBox? CurrentMessageBox { get; set; } = null;
         #endregion
 
         #region Property changed methods
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) 
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             new Thread(() => this.RaisePropertyChanged(propertyName)).Start();
         }
@@ -92,9 +93,9 @@ namespace Playground.ViewModels
             }
 
             storage = value;
-            new Thread(() => 
+            new Thread(() =>
             {
-                this.RaisePropertyChanged(propertyName); 
+                this.RaisePropertyChanged(propertyName);
                 onChange?.Invoke();
             }).Start();
         }
@@ -108,9 +109,9 @@ namespace Playground.ViewModels
 
             storage = value;
 
-            new Thread(() => 
+            new Thread(() =>
             {
-                this.RaisePropertyChanged(propertyName); 
+                this.RaisePropertyChanged(propertyName);
                 onChange?.Invoke(value);
             }).Start();
         }
@@ -131,10 +132,10 @@ namespace Playground.ViewModels
                 : overrideTitle;
 
             return await Show(
-                parent: _parentView, 
-                title: title, 
-                message: message, 
-                positive: positive, 
+                parent: _parentView,
+                title: title,
+                message: message,
+                positive: positive,
                 negative: negative,
                 onDismiss: () => CurrentMessageBox = null);
         }
@@ -146,15 +147,16 @@ namespace Playground.ViewModels
                 : overrideTitle;
 
             return await Show(
-                parent: _parentView, 
+                parent: _parentView,
                 title: title,
-                message: message, 
-                positive: positive, 
-                negative: negative, 
-                onDismiss: () => {
+                message: message,
+                positive: positive,
+                negative: negative,
+                onDismiss: () =>
+                {
                     onDismiss();
                     CurrentMessageBox = null;
-            });
+                });
         }
 
         internal async Task<bool?> ShowDialog(Dialogtype messageBoxType, string message, string positive, string negative, string neutral, string overrideTitle = "")
@@ -164,12 +166,12 @@ namespace Playground.ViewModels
                 : overrideTitle;
 
             return await Show(
-                parent: _parentView, 
-                message: message, 
-                title: title, 
-                positive: positive, 
-                negative: negative, 
-                neutral: neutral, 
+                parent: _parentView,
+                message: message,
+                title: title,
+                positive: positive,
+                negative: negative,
+                neutral: neutral,
                 onDismiss: () => CurrentMessageBox = null);
         }
 
@@ -182,14 +184,15 @@ namespace Playground.ViewModels
             return await Show(
                 parent: _parentView,
                 title: title,
-                message: message, 
-                positive: positive, 
-                negative: negative, 
-                neutral: neutral, 
-                onDismiss: () => {
+                message: message,
+                positive: positive,
+                negative: negative,
+                neutral: neutral,
+                onDismiss: () =>
+                {
                     onDismiss();
                     CurrentMessageBox = null;
-            });
+                });
         }
 
         internal async Task ShowDialog(QRCoder.BitmapByteQRCode bitmap)
@@ -202,9 +205,9 @@ namespace Playground.ViewModels
             CurrentMessageBox?.Close();
             CurrentMessageBox = null;
 
-            _parentView.Closing         -= OnClosing;
-            _parentView.Closed          -= OnClosed;
-            _parentView.Opened          -= OnOpened;
+            _parentView.Closing -= OnClosing;
+            _parentView.Closed -= OnClosed;
+            _parentView.Opened -= OnOpened;
 
             GC.SuppressFinalize(this);
         }

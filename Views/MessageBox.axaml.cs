@@ -1,10 +1,12 @@
-using Avalonia;
+// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using System;
 using System.IO;
-using System.Media;
 using System.Threading.Tasks;
 using static Playground.ViewModels.BaseViewModel;
 
@@ -31,21 +33,21 @@ namespace Playground.Views
                 Title = "Scan code"
             };
 
-            TextBlock? textBlock = messageBox.FindControl<TextBlock>("Text");
+            TextBlock? textBlock = messageBox.FindControl<TextBlock>("Text") ?? throw new NullReferenceException($"Text can not be null!!!");
             textBlock.IsVisible = false;
 
-            Image? image = messageBox.FindControl<Image>("DialogImage");
+            Image? image = messageBox.FindControl<Image>("DialogImage") ?? throw new NullReferenceException($"DialogImage can not be null!!!");
 
             MemoryStream memoryStream = new(bitmap.GetGraphic(20));
 
             Avalonia.Media.Imaging.Bitmap AvaloniaBitmap = new(memoryStream);
             image.IsVisible = true;
-            image.Width     = 400;
-            image.Height    = 400;
-            image.Source    = AvaloniaBitmap;
+            image.Width = 400;
+            image.Height = 400;
+            image.Source = AvaloniaBitmap;
 
 
-            StackPanel? buttonPanel = messageBox.FindControl<StackPanel>("Buttons");
+            StackPanel? buttonPanel = messageBox.FindControl<StackPanel>("Buttons") ?? throw new NullReferenceException($"Button panel can not be null!!!");
 
             void AddButton(string caption)
             {
@@ -63,11 +65,11 @@ namespace Playground.Views
 
             TaskCompletionSource<bool?>? tcs = new();
             messageBox.Closed += delegate { _ = tcs.TrySetResult(true); };
-            if (parent is not null) 
+            if (parent is not null)
             {
                 _ = messageBox.ShowDialog(parent);
             }
-            else 
+            else
             {
                 messageBox.Show();
             }
@@ -87,7 +89,7 @@ namespace Playground.Views
         /// <returns>Returns true when positive button is clicked, false when negative button is clicked and null when neutral button is clicked</returns>
         internal static Task<bool?> Show(Window? parent, string title, string message, string positive, string negative, string neutral)
         {
-            (TaskCompletionSource<bool?> taskCompletionSource, MessageBox messageBox) = CreateNullableBoolMessageBox(parent, title, message);
+            (TaskCompletionSource<bool?> taskCompletionSource, MessageBox messageBox) = _CreateNullableBoolMessageBox(parent, title, message);
 
             messageBox.AddButton(positive, true);
             messageBox.AddButton(negative, false);
@@ -107,7 +109,7 @@ namespace Playground.Views
         /// <returns>Returns true when positive button is clicked and false when negative button is clicked</returns>
         internal static Task<bool> Show(Window? parent, string title, string message, string positive, string negative)
         {
-            (TaskCompletionSource<bool> taskCompletionSource, MessageBox messageBox) = CreateBoolMessageBox(parent, title, message);
+            (TaskCompletionSource<bool> taskCompletionSource, MessageBox messageBox) = _CreateBoolMessageBox(parent, title, message);
 
             messageBox.AddButton(positive, true);
             messageBox.AddButton(negative, false, true);
@@ -125,7 +127,7 @@ namespace Playground.Views
         /// <returns>True when button is clicked</returns>
         internal static Task<bool> Show(Window? parent, string title, string message, string button = "Cancel")
         {
-            (TaskCompletionSource<bool> taskCompletionSource, MessageBox messageBox) = CreateBoolMessageBox(parent, title, message);
+            (TaskCompletionSource<bool> taskCompletionSource, MessageBox messageBox) = _CreateBoolMessageBox(parent, title, message);
 
             messageBox.AddButton(button, true, true);
 
@@ -139,30 +141,31 @@ namespace Playground.Views
             return result;
         }
 
-        private static void ConfigureIconAndSound(string title, MessageBox messageBox)
+        private static void _ConfigureIconAndSound(string title, MessageBox messageBox)
         {
             if (title.ToUpper().Trim().Contains("SUCCESS"))
             {
-                SetIcon(Dialogtype.Success, messageBox);
+                _SetIcon(Dialogtype.Success, messageBox);
             }
             else if (title.ToUpper().Trim().Contains("ERROR"))
             {
-                SetIcon(Dialogtype.Error, messageBox);
-                if (AvaloniaLocator.Current.GetService<IRuntimePlatform>()?.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
+                _SetIcon(Dialogtype.Error, messageBox);
+
+                if (OperatingSystem.IsWindows())
                 {
-                    #pragma warning disable CA1416 // Validate platform compatibility
-                    SystemSounds.Hand.Play();
-                    #pragma warning restore CA1416 // Validate platform compatibility
+#pragma warning disable CA1416 // Validate platform compatibility
+                    //SystemSounds.Hand();
+#pragma warning restore CA1416 // Validate platform compatibility
                 }
             }
             else if (title.ToUpper().Trim().Contains("WARNING"))
             {
-                SetIcon(Dialogtype.Warning, messageBox);
-                if (AvaloniaLocator.Current.GetService<IRuntimePlatform>()?.GetRuntimeInfo().OperatingSystem == OperatingSystemType.WinNT)
+                _SetIcon(Dialogtype.Warning, messageBox);
+                if (OperatingSystem.IsWindows())
                 {
-                    #pragma warning disable CA1416 // Validate platform compatibility
-                    SystemSounds.Exclamation.Play();
-                    #pragma warning restore CA1416 // Validate platform compatibility
+#pragma warning disable CA1416 // Validate platform compatibility
+                    //SystemSounds.Exclamation.Play();
+#pragma warning restore CA1416 // Validate platform compatibility
                 }
             }
         }
@@ -173,11 +176,13 @@ namespace Playground.Views
 
         internal void SetAlertIconSource(Uri uri)
         {
-            this.FindControl<Image>("AlertIcon").Source = new Avalonia.Media.Imaging.Bitmap(AvaloniaLocator.Current.GetService<IAssetLoader>()?.Open(uri));
-            this.FindControl<Image>("AlertIcon").IsVisible = true;
+            var alertIcon = this.FindControl<Image>("AlertIcon") ?? throw new NullReferenceException($"AlertIconcan not be null!!!");
+
+            alertIcon.Source = new Avalonia.Media.Imaging.Bitmap(AssetLoader.Open(uri));
+            alertIcon.IsVisible = true;
         }
 
-        private static void SetIcon(Dialogtype type, MessageBox messageBox)
+        private static void _SetIcon(Dialogtype type, MessageBox messageBox)
         {
             switch (type)
             {
@@ -200,14 +205,16 @@ namespace Playground.Views
             return result;
         }
 
-        private static (TaskCompletionSource<bool?> taskCompletionSource, MessageBox messageBox) CreateNullableBoolMessageBox(Window? parent, string title, string message)
+        private static (TaskCompletionSource<bool?> taskCompletionSource, MessageBox messageBox) _CreateNullableBoolMessageBox(Window? parent, string title, string message)
         {
             MessageBox messageBox = new()
             {
                 Title = title
             };
 
-            messageBox.FindControl<TextBlock>("Text").Text = message;
+
+            var messageBoxTextBlock = messageBox.FindControl<TextBlock>("Text") ?? throw new NullReferenceException("Message box's text block can not be null.");
+            messageBoxTextBlock.Text = message;
             messageBox.FinalResult = false;
 
             TaskCompletionSource<bool?>? taskCompletionSource = new();
@@ -217,7 +224,7 @@ namespace Playground.Views
                 _ = taskCompletionSource.TrySetResult(messageBox.FinalResult);
             };
 
-            ConfigureIconAndSound(title, messageBox);
+            _ConfigureIconAndSound(title, messageBox);
 
             if (parent is not null)
             {
@@ -231,14 +238,15 @@ namespace Playground.Views
             return (taskCompletionSource, messageBox);
         }
 
-        private static (TaskCompletionSource<bool> taskCompletionSource, MessageBox messageBox) CreateBoolMessageBox(Window? parent, string title, string message)
+        private static (TaskCompletionSource<bool> taskCompletionSource, MessageBox messageBox) _CreateBoolMessageBox(Window? parent, string title, string message)
         {
             MessageBox messageBox = new()
             {
                 Title = title
             };
 
-            messageBox.FindControl<TextBlock>("Text").Text = message;
+            var messageBoxTextBlock = messageBox.FindControl<TextBlock>("Text") ?? throw new NullReferenceException("Message box's text block can not be null.");
+            messageBoxTextBlock.Text = message;
             messageBox.FinalResult = false;
 
             TaskCompletionSource<bool>? taskCompletionSource = new();
@@ -248,7 +256,7 @@ namespace Playground.Views
                 _ = taskCompletionSource.TrySetResult(messageBox.FinalResult ?? false);
             };
 
-            ConfigureIconAndSound(title, messageBox);
+            _ConfigureIconAndSound(title, messageBox);
 
             if (parent is not null)
             {

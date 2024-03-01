@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Playground.ViewModels;
-using System;
 
 namespace Playground.Views
 {

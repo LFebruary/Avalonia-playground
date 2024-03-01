@@ -1,5 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using System;
 using System.Collections.Generic;
 
@@ -7,12 +6,12 @@ namespace Playground.Views
 {
     internal static partial class ViewTools
     {
-        internal static readonly List<(Type type, Action openWindow)> _windows = new() 
-        { 
+        internal static readonly List<(Type type, Action openWindow)> _windows =
+        [
             (typeof(LandingWindow),     () => OpenNewOrRestoreWindow<LandingWindow>()), 
             (typeof(SerialWindow),      () => OpenNewOrRestoreWindow<SerialWindow>()),
             (typeof(NetworkingWindow),  () => OpenNewOrRestoreWindow<NetworkingWindow>()),
-        };
+        ];
 
         internal static void OpenNewOrRestoreWindow<T>() where T : Window, new()
         {

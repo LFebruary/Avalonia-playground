@@ -35,6 +35,7 @@
 					</ScrollViewer>
 					
 					<StackPanel Spacing="24">
+						<!-- 
 						<ListBox Grid.Row="1" Items="{Binding Headers}" SelectedItems="{Binding SelectedHeader}" SelectionMode="Single" x:Name="headersListBox">
 							<ListBox.ItemTemplate>
 								<DataTemplate DataType="{x:Type views:Header}">
@@ -51,6 +52,8 @@
 								</DataTemplate>
 							</ListBox.ItemTemplate>
 						</ListBox>
+						-->
+
 						<Button Content="Add Header" Margin="8" Command="{Binding AddHeaderCommand}"/>
 					</StackPanel>
 				</Grid>

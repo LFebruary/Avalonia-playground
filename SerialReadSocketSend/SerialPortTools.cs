@@ -1,11 +1,14 @@
-﻿using Avalonia.Threading;
+﻿// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
+using Avalonia.Threading;
 using Playground.Constants;
 using System;
 using System.IO.Ports;
 using System.Threading.Tasks;
-
-using static Playground.CustomSettings;
 using static Playground.Constants.SerialConstants;
+using static Playground.CustomSettings;
 
 namespace Playground.SerialReadSocketSend
 {
@@ -151,7 +154,7 @@ namespace Playground.SerialReadSocketSend
                         throw new CustomException($"{ErrorMessageConstants.CouldNotConnectToSerialPort}{_serialPort.PortName}");
                     }
 
-                    StartReadingSerialPortWithTimeout();
+                    _StartReadingSerialPortWithTimeout();
 
                 }
                 catch (UnauthorizedAccessException e)
@@ -201,7 +204,7 @@ namespace Playground.SerialReadSocketSend
         /// <summary>
         /// This method starts reading from created serial port and sets the static last read value on every read
         /// </summary>
-        private static async void StartReadingSerialPortWithTimeout()
+        private static async void _StartReadingSerialPortWithTimeout()
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {

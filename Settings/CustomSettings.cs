@@ -1,4 +1,8 @@
-﻿using Playground.Constants;
+﻿// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
+using Playground.Constants;
 using Playground.Properties;
 using System;
 using System.Collections.Specialized;
@@ -30,10 +34,10 @@ namespace Playground
         {
             return GetSetting(StringSetting.FlowControl) switch
             {
-                FlowControlCtsRts   => FlowControl.Ctr_Rts,
-                FlowControlDsrDtr   => FlowControl.Dsr_Dtr,
-                FlowControlXonXoff  => FlowControl.Xon_Xoff,
-                FlowControlNone     => FlowControl.None,
+                FlowControlCtsRts => FlowControl.Ctr_Rts,
+                FlowControlDsrDtr => FlowControl.Dsr_Dtr,
+                FlowControlXonXoff => FlowControl.Xon_Xoff,
+                FlowControlNone => FlowControl.None,
                 _ => null,
             };
         }
@@ -42,14 +46,14 @@ namespace Playground
         {
             return GetSetting(StringSetting.Parity) switch
             {
-                EvenParity  => Parity.Even,
-                OddParity   => Parity.Odd,
-                NoParity    => Parity.None,
+                EvenParity => Parity.Even,
+                OddParity => Parity.Odd,
+                NoParity => Parity.None,
                 _ => null,
             };
         }
 
-        private static string DefaultIfInvalid(string value, string defaultValue) => string.IsNullOrWhiteSpace(value) ? defaultValue : value;
+        private static string _DefaultIfInvalid(string value, string defaultValue) => string.IsNullOrWhiteSpace(value) ? defaultValue : value;
 
         public static string GetSetting(StringSetting setting)
         {
@@ -57,14 +61,14 @@ namespace Playground
             {
                 StringSetting.ComPort => Settings.Default.SerialPort,
 
-                StringSetting.Parity => DefaultIfInvalid(
+                StringSetting.Parity => _DefaultIfInvalid(
                     ParityValues.Contains(Settings.Default.Parity)
                         ? Settings.Default.Parity
                         : DefaultParity,
                     DefaultParity),
 
-                StringSetting.FlowControl => DefaultIfInvalid(Settings.Default.Flow_control, FlowControlNone),
-                StringSetting.StabilityIndicatorSnippet => DefaultIfInvalid(Settings.Default.Stability_indicator_snippet, DefaultStabilityIndicatorSnippet),
+                StringSetting.FlowControl => _DefaultIfInvalid(Settings.Default.Flow_control, FlowControlNone),
+                StringSetting.StabilityIndicatorSnippet => _DefaultIfInvalid(Settings.Default.Stability_indicator_snippet, DefaultStabilityIndicatorSnippet),
                 _ => throw new ArgumentOutOfRangeException(nameof(setting)),
             };
         }
@@ -104,38 +108,38 @@ namespace Playground
             SerialTimeoutMs
         }
 
-        private static int DefaultIfInvalid(int value, int defaultValue) => value <= -1 ? defaultValue : value;
+        private static int _DefaultIfInvalid(int value, int defaultValue) => value <= -1 ? defaultValue : value;
 
         public static int GetSetting(IntSetting setting)
         {
             return setting switch
             {
-                IntSetting.BaudRate => DefaultIfInvalid(
+                IntSetting.BaudRate => _DefaultIfInvalid(
                     BaudRates.Contains(Settings.Default.BaudRate)
                         ? Settings.Default.BaudRate
                         : DefaultBaudRate,
                     DefaultBaudRate),
 
-                IntSetting.Databits => DefaultIfInvalid(
+                IntSetting.Databits => _DefaultIfInvalid(
                     DataBits.Contains(Settings.Default.Databits)
                         ? Settings.Default.Databits
                         : DefaultDatabits,
                     DefaultDatabits),
 
-                IntSetting.Stopbits => DefaultIfInvalid(
+                IntSetting.Stopbits => _DefaultIfInvalid(
                     SerialConstants.StopBits.Contains(Settings.Default.Stop_bits)
                         ? Settings.Default.Stop_bits
                         : DefaultStopbits,
                     DefaultStopbits),
 
 
-                IntSetting.StabilityIndicatorStartPosition => DefaultIfInvalid(Settings.Default.Stability_indicator_starting_position, DefaultStabilityIndicatorStartPosition),
-                IntSetting.IdenticalReadingQuantity => DefaultIfInvalid(Settings.Default.Number_of_identical_readings, DefaultIdenticalReadingQuantity),
-                IntSetting.ScaleStringWeightStartPosition => DefaultIfInvalid(Settings.Default.Scale_string_weight_start_position, DefaultScaleStringWeightStartPosition),
-                IntSetting.ScaleStringWeightEndPosition => DefaultIfInvalid(Settings.Default.Scale_string_weight_end_position, DefaultScaleStringWeightEndPosition),
-                IntSetting.ScaleStringRequiredLength => DefaultIfInvalid(Settings.Default.Scale_string_minimum_length, DefaultScaleStringMinimumLength),
-                IntSetting.BroadcastPort => DefaultIfInvalid(Settings.Default.BroadcastPort, 5050),
-                IntSetting.SerialTimeoutMs => DefaultIfInvalid(Settings.Default.Serial_timeout_ms, 1000),
+                IntSetting.StabilityIndicatorStartPosition => _DefaultIfInvalid(Settings.Default.Stability_indicator_starting_position, DefaultStabilityIndicatorStartPosition),
+                IntSetting.IdenticalReadingQuantity => _DefaultIfInvalid(Settings.Default.Number_of_identical_readings, DefaultIdenticalReadingQuantity),
+                IntSetting.ScaleStringWeightStartPosition => _DefaultIfInvalid(Settings.Default.Scale_string_weight_start_position, DefaultScaleStringWeightStartPosition),
+                IntSetting.ScaleStringWeightEndPosition => _DefaultIfInvalid(Settings.Default.Scale_string_weight_end_position, DefaultScaleStringWeightEndPosition),
+                IntSetting.ScaleStringRequiredLength => _DefaultIfInvalid(Settings.Default.Scale_string_minimum_length, DefaultScaleStringMinimumLength),
+                IntSetting.BroadcastPort => _DefaultIfInvalid(Settings.Default.BroadcastPort, 5050),
+                IntSetting.SerialTimeoutMs => _DefaultIfInvalid(Settings.Default.Serial_timeout_ms, 1000),
                 _ => throw new ArgumentOutOfRangeException(nameof(setting)),
             };
         }
@@ -193,10 +197,10 @@ namespace Playground
         {
             return setting switch
             {
-                BoolSetting.StabilityIndicatorActive            => Settings.Default.Stability_indicator_active,
-                BoolSetting.SequenceOfIdenticalReadingsActive   => Settings.Default.Sequence_of_identical_readings_active,
-                BoolSetting.ScaleStringRequiredLength           => Settings.Default.Scale_string_must_conform_to_length,
-                BoolSetting.TakeFullScaleString                 => Settings.Default.Take_full_scale_string,
+                BoolSetting.StabilityIndicatorActive => Settings.Default.Stability_indicator_active,
+                BoolSetting.SequenceOfIdenticalReadingsActive => Settings.Default.Sequence_of_identical_readings_active,
+                BoolSetting.ScaleStringRequiredLength => Settings.Default.Scale_string_must_conform_to_length,
+                BoolSetting.TakeFullScaleString => Settings.Default.Take_full_scale_string,
                 _ => throw new ArgumentOutOfRangeException(nameof(setting)),
             };
         }
@@ -237,7 +241,7 @@ namespace Playground
             };
         }
 
-        private static void SetSetting(this StringCollectionSetting setting, StringCollection value)
+        private static void _SetSetting(this StringCollectionSetting setting, StringCollection value)
         {
             switch (setting)
             {
@@ -252,7 +256,7 @@ namespace Playground
             switch (setting)
             {
                 case StringCollectionSetting.CollectionOfReceivedValues:
-                    Settings.Default.Received_values = new StringCollection();
+                    Settings.Default.Received_values = [];
                     break;
             }
         }
@@ -280,10 +284,10 @@ namespace Playground
 
                         if (Settings.Default.Received_values == null)
                         {
-                            Settings.Default.Received_values = new StringCollection()
-                            {
+                            Settings.Default.Received_values =
+                            [
                                 value
-                            };
+                            ];
                         }
                         else
                         {
@@ -298,7 +302,7 @@ namespace Playground
 
         public static void ClearCollectionOfReceivedValues()
         {
-            SetSetting(StringCollectionSetting.CollectionOfReceivedValues, new StringCollection());
+            _SetSetting(StringCollectionSetting.CollectionOfReceivedValues, []);
         }
         #endregion
     }

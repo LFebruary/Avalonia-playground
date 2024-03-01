@@ -24,6 +24,6 @@ namespace Playground
             base.OnFrameworkInitializationCompleted();
         }
         
-        public static List<Window> Windows { get; set; } = new();
+        public static List<Window> Windows { get; set; } = [];
     }
 }

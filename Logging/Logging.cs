@@ -1,9 +1,12 @@
-﻿using System;
+﻿// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
+using Playground.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using Playground.Logging;
 using static Playground.Constants.LoggingConstants;
 
 namespace Playground
@@ -26,7 +29,7 @@ namespace Playground
 
     public static partial class LoggingService
     {
-        private static readonly List<Tuple<LogType, DateTime, string>> _logs = new();
+        private static readonly List<Tuple<LogType, DateTime, string>> _logs = [];
         internal static void WriteLog(LogType type, string? data = null) => _logs.Add(Tuple.Create(type, DateTime.Now, data ?? string.Empty));
         internal static void WriteLog(LogType type, int data) => _logs.Add(Tuple.Create(type, DateTime.Now, data.ToString()));
 
@@ -46,11 +49,11 @@ namespace Playground
             }
         }
 
-        private static string CreateLogString(bool intentionallyDumpingLogs = false)
+        private static string _CreateLogString(bool intentionallyDumpingLogs = false)
         {
             string result = string.Empty;
 
-            if (_logs.Any() == false)
+            if (_logs.Count == 0)
             {
                 return NoLogsAvailableToWrite;
             }
@@ -66,7 +69,7 @@ namespace Playground
                 result += ShuttingDownApp;
             }
 
-            
+
             result += "\n";
 
             _logs.ForEach(element =>
@@ -75,7 +78,7 @@ namespace Playground
                 result += element.Item2.ToString(DateTimeFormat);
                 result += " \t";
 
-                
+
                 switch (element.Item1)
                 {
                     case LogType.AppStartup:
@@ -137,11 +140,11 @@ namespace Playground
                 _ = Directory.CreateDirectory(LogFolderPath);
             }
 
-            _ = _stringBuilder.Append(CreateLogString(dumpingLogs));
+            _ = _stringBuilder.Append(_CreateLogString(dumpingLogs));
 
             _logs.Clear();
 
-            Debug.WriteLine(_stringBuilder.ToString());
+            CustomDebug.WriteLine(_stringBuilder.ToString());
             File.AppendAllText(LogFilePath, _stringBuilder.ToString());
             _ = _stringBuilder.Clear();
         }

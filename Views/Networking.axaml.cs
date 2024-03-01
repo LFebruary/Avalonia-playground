@@ -1,7 +1,10 @@
+// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Playground.Logging;
 using Playground.ViewModels;
 using System;
 using System.ComponentModel;
@@ -13,14 +16,14 @@ namespace Playground.Views
     {
         public NetworkingWindow()
         {
-            InitializeComponent();
+            _InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
 #endif
             DataContext = new NetworkingViewModel(this);
         }
 
-        private void InitializeComponent()
+        private void _InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
         }
@@ -28,12 +31,14 @@ namespace Playground.Views
         internal void FocusItem(Header header)
         {
             ListBox? headersListBox = FindControlNullSafe<ListBox>("headersListBox");
-                
-            headersListBox.BeginBatchUpdate();
+            if (headersListBox is null)
+                return;
 
-            ListBoxItem? listBoxItem = (ListBoxItem)headersListBox
-                .ItemContainerGenerator
-                .ContainerFromIndex(header.Index);
+            headersListBox.BeginInit();
+
+            Control? listBoxItem = headersListBox.ContainerFromIndex(header.Index);
+            if (listBoxItem is null)
+                return;
 
             listBoxItem.Focus();
         }
@@ -55,8 +60,8 @@ namespace Playground.Views
                 PropertyChangedHandler -= value;
             }
         }
-        
-        protected virtual void OnPropertyChanged([CallerMemberName]string? propertyName = "")
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = "")
         {
             PropertyChangedHandler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -87,7 +92,7 @@ namespace Playground.Views
         }
     }
 
-    public class Header: PropertyChanged
+    public class Header : PropertyChanged
     {
         private int _index = -1;
         public int Index
@@ -110,10 +115,10 @@ namespace Playground.Views
 
         public Header(string label, string value, int index, bool isDefaultField = false)
         {
-            Key             = label;
-            Value           = value;
-            IsDefaultField  = isDefaultField;
-            Index           = index;
+            Key = label;
+            Value = value;
+            IsDefaultField = isDefaultField;
+            Index = index;
         }
 
         private bool _isDefaultField = false;

@@ -1,4 +1,8 @@
-﻿using Playground.Constants;
+﻿// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
+using Playground.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,36 +20,36 @@ namespace Playground.SerialReadSocketSend
         /// IPAddress on which the socket will listen <br/>
         /// This method first tries to get an IPAddress for the ethernet connection, if not then a wireless lan connection
         /// </summary>
-        private static  IPAddress   EndPointIPAddress   => System.Net.IPAddress.Parse(GetLocalIPV4Addresses(NetworkInterfaceType.Ethernet).FirstOrDefault()
-            ?? GetLocalIPV4Addresses(NetworkInterfaceType.Wireless80211).FirstOrDefault()
+        private static IPAddress EndPointIPAddress => System.Net.IPAddress.Parse(_GetLocalIPV4Addresses(NetworkInterfaceType.Ethernet).FirstOrDefault()
+            ?? _GetLocalIPV4Addresses(NetworkInterfaceType.Wireless80211).FirstOrDefault()
             ?? throw new CustomException(ErrorMessageConstants.CouldNotDetermineLocalIPAddress));
 
         /// <summary>
         /// This merely converts the EndPoint IP address to a string for display on main window
         /// </summary>
-        internal static string      IPAddress           => EndPointIPAddress.ToString();
+        internal static string IPAddress => EndPointIPAddress.ToString();
 
         /// <summary>
         /// Port on which the values will be broadcasted
         /// </summary>
-        internal static int         Port                => CustomSettings.GetSetting(CustomSettings.IntSetting.BroadcastPort);
+        internal static int Port => CustomSettings.GetSetting(CustomSettings.IntSetting.BroadcastPort);
 
         /// <summary>
         /// This checks to see if the listening socket has been instantiated and is open to send values over
         /// </summary>
-        internal static bool        SocketAvailable     => _listener is not null && _listeningFlag;
+        internal static bool SocketAvailable => _listener is not null && _listeningFlag;
         #endregion
 
         #region Fields
         /// <summary>
         /// Socket that is being lisstened on
         /// </summary>
-        private static Socket?  _listener;
+        private static Socket? _listener;
 
         /// <summary>
         /// Flag that indicates whether any values are being transmitted over the socket
         /// </summary>
-        private static bool     _listeningFlag = false;
+        private static bool _listeningFlag = false;
         #endregion
 
         #region Methods
@@ -53,7 +57,7 @@ namespace Playground.SerialReadSocketSend
         /// Callback to invoke every time a client socket connection is accepted
         /// </summary>
         /// <param name="asyncResult">Current listening socket and string value to transmit wrapped in an AsyncResult</param>
-        private static void DoAcceptSocketCallback(IAsyncResult asyncResult)
+        private static void _DoAcceptSocketCallback(IAsyncResult asyncResult)
         {
             if (asyncResult.AsyncState is null || SocketAvailable == false)
             {
@@ -97,9 +101,9 @@ namespace Playground.SerialReadSocketSend
         /// </summary>
         /// <param name="interfaceType">Specific interface to find addresses for</param>
         /// <returns>List of string ip addresses for specified interface</returns>
-        private static List<string> GetLocalIPV4Addresses(NetworkInterfaceType interfaceType)
+        private static List<string> _GetLocalIPV4Addresses(NetworkInterfaceType interfaceType)
         {
-            List<string> ipAddressList = new();
+            List<string> ipAddressList = [];
             foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
             {
                 if ((item.Name.Contains("Virtual") == false) && item.NetworkInterfaceType == interfaceType && item.OperationalStatus == OperationalStatus.Up)
@@ -137,7 +141,7 @@ namespace Playground.SerialReadSocketSend
             {
                 try
                 {
-                    _ = _listener.BeginAccept(new AsyncCallback(DoAcceptSocketCallback), (_listener, stringValue));
+                    _ = _listener.BeginAccept(new AsyncCallback(_DoAcceptSocketCallback), (_listener, stringValue));
                 }
                 catch (SocketException ex)
                 {

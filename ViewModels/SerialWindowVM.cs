@@ -1,16 +1,20 @@
+// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
+using Playground.Constants;
+using Playground.SerialReadSocketSend;
+using Playground.Views;
+using QRCoder;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using static Playground.CustomSettings;
-using System.IO.Ports;
-using System.Threading.Tasks;
 using System.Collections.Specialized;
-using Playground.Constants;
-using QRCoder;
-using System.Globalization;
 using System.ComponentModel;
-using Playground.Views;
-using Playground.SerialReadSocketSend;
+using System.Globalization;
+using System.IO.Ports;
+using System.Linq;
+using System.Threading.Tasks;
+using static Playground.CustomSettings;
 
 namespace Playground.ViewModels
 {
@@ -20,13 +24,13 @@ namespace Playground.ViewModels
         public SerialWindowVM(SerialWindow window) : base(window)
         {
             SelectedFlowControl = GetFlowControl();
-            SelectedParity      = GetParity();
+            SelectedParity = GetParity();
 
-            _backgroundSocketWorker.DoWork -= BackgroundSocketWorker_DoWork;
-            _backgroundSocketWorker.DoWork += BackgroundSocketWorker_DoWork;
+            _backgroundSocketWorker.DoWork -= _BackgroundSocketWorker_DoWork;
+            _backgroundSocketWorker.DoWork += _BackgroundSocketWorker_DoWork;
 
-            _backgroundSocketWorker.RunWorkerCompleted -= BackgroundSocketWorker_RunWorkerCompleted;
-            _backgroundSocketWorker.RunWorkerCompleted += BackgroundSocketWorker_RunWorkerCompleted;
+            _backgroundSocketWorker.RunWorkerCompleted -= _BackgroundSocketWorker_RunWorkerCompleted;
+            _backgroundSocketWorker.RunWorkerCompleted += _BackgroundSocketWorker_RunWorkerCompleted;
         }
         #endregion
 
@@ -35,28 +39,28 @@ namespace Playground.ViewModels
         #endregion
 
         #region Computed properties
-        
-        public bool         BroadcastInputsEnabled      => BroadcastingSerialValues == false;
-        public string       LastProcessedValue          => ProcessReading();
-        public DateTime?    LastReceivedValueTimestamp  => string.IsNullOrWhiteSpace(LastReceivedValue) ? null : DateTime.Now;
-        public string       ListenToSerialButtonText    => $"{(ListeningOnSerialPort ? "Stop" : "Start")} listening on serial port";
-        public string       ListenToSerialCaptionText   => ListeningOnSerialPort == false
+
+        public bool BroadcastInputsEnabled => BroadcastingSerialValues == false;
+        public string LastProcessedValue => _ProcessReading();
+        public DateTime? LastReceivedValueTimestamp => string.IsNullOrWhiteSpace(LastReceivedValue) ? null : DateTime.Now;
+        public string ListenToSerialButtonText => $"{(ListeningOnSerialPort ? "Stop" : "Start")} listening on serial port";
+        public string ListenToSerialCaptionText => ListeningOnSerialPort == false
                     ? "Currently not listening to any serial port"
                     : SerialPortTools.IsPortOpen
                         ? $"Currently listening to serial port {SelectedComPort} with: Baudrate {SelectedBaudRate} \t Databits {SelectedDataBits} \t Stop bits {SelectedStopBits}"
                         : "Serial port is not open, but window attempting to listen to it. Restart program and try again.";
-        public bool         SerialInputsEnabled         => ListeningOnSerialPort == false;
-        public string       SocketConnectionButtonText  => $"{(BroadcastingSerialValues ? "Stop" : "Start")} broadcasting serial readings";
-        public string       SocketConnectionCaptionText => BroadcastingSerialValues
+        public bool SerialInputsEnabled => ListeningOnSerialPort == false;
+        public string SocketConnectionButtonText => $"{(BroadcastingSerialValues ? "Stop" : "Start")} broadcasting serial readings";
+        public string SocketConnectionCaptionText => BroadcastingSerialValues
             ? $"Currently broadcasting values over\nsocket connection via: {SocketTools.IPAddress}:{SocketTools.Port}"
             : "Values are not being broadcasted over\nsocket connection.";
 
-        public  static int              Port            => SocketTools.Port;
-        private static StringCollection ReceivedValues  => GetSetting(StringCollectionSetting.CollectionOfReceivedValues);
+        public static int Port => SocketTools.Port;
+        private static StringCollection ReceivedValues => GetSetting(StringCollectionSetting.CollectionOfReceivedValues);
 
         #region Tooltips
         public string StabilityIndicatorTooltip => TooltipConstants.StabilityIndicatorSnipTooltip(StabilityIndicatorActive, StabilityIndicatorSnippet);
-        public string IdenticalReadingsTooltip  => TooltipConstants.IdenticalReadingsTooltip(SequenceOfIdenticalReadingsActive, NumberOfIdenticalReadings);
+        public string IdenticalReadingsTooltip => TooltipConstants.IdenticalReadingsTooltip(SequenceOfIdenticalReadingsActive, NumberOfIdenticalReadings);
         #endregion
 
         #endregion
@@ -134,29 +138,30 @@ namespace Playground.ViewModels
         private FlowControl? SelectedFlowControl
         {
             get => _selectedFlowControl;
-            set => SetProperty(ref _selectedFlowControl, value, () => {
+            set => SetProperty(ref _selectedFlowControl, value, () =>
+            {
                 SerialPortTools.SetFlowControl(SelectedFlowControl);
                 switch (_selectedFlowControl)
                 {
                     case FlowControl.Ctr_Rts:
-                        CtsRtsSelected  = true;
-                        DsrDtrSelected  = false;
+                        CtsRtsSelected = true;
+                        DsrDtrSelected = false;
                         XonXoffSelected = false;
-                        NoneSelected    = false;
+                        NoneSelected = false;
                         CustomSettings.SetSetting(StringSetting.FlowControl, SerialConstants.FlowControlCtsRts);
                         break;
                     case FlowControl.Dsr_Dtr:
-                        CtsRtsSelected  = false;
-                        DsrDtrSelected  = true;
+                        CtsRtsSelected = false;
+                        DsrDtrSelected = true;
                         XonXoffSelected = false;
-                        NoneSelected    = false;
+                        NoneSelected = false;
                         CustomSettings.SetSetting(StringSetting.FlowControl, SerialConstants.FlowControlDsrDtr);
                         break;
                     case FlowControl.Xon_Xoff:
-                        CtsRtsSelected  = false;
-                        DsrDtrSelected  = false;
+                        CtsRtsSelected = false;
+                        DsrDtrSelected = false;
                         XonXoffSelected = true;
-                        NoneSelected    = false;
+                        NoneSelected = false;
                         CustomSettings.SetSetting(StringSetting.FlowControl, SerialConstants.FlowControlXonXoff);
                         break;
                     case FlowControl.None:
@@ -250,7 +255,8 @@ namespace Playground.ViewModels
         public Parity? SelectedParity
         {
             get => _selectedParity;
-            set => SetProperty(ref _selectedParity, value, () => {
+            set => SetProperty(ref _selectedParity, value, () =>
+            {
                 switch (_selectedParity)
                 {
                     case Parity.Even:
@@ -647,14 +653,14 @@ namespace Playground.ViewModels
                 try
                 {
                     SerialPortTools.GetPortAndStartListening();
-                    SerialPortTools.ValueUpdatedCallback = ValueUpdatedCallback;
-                    SerialPortTools.ThreadExceptionCallback = ThreadExceptionCallback;
+                    SerialPortTools.ValueUpdatedCallback = _ValueUpdatedCallback;
+                    SerialPortTools.ThreadExceptionCallback = _ThreadExceptionCallback;
                     LoggingService.WriteLog(LogType.ComPortStart, SelectedComPort);
                 }
                 catch (CustomException exception)
                 {
                     LoggingService.WriteLog(LogType.FarfulcrumException, exception.Message);
-                    await ThreadExceptionCallback(exception);
+                    await _ThreadExceptionCallback(exception);
                     return;
                 }
             }
@@ -681,7 +687,7 @@ namespace Playground.ViewModels
         #region Methods
 
         #region Background worker methods
-        private void BackgroundSocketWorker_DoWork(object? sender, DoWorkEventArgs e)
+        private void _BackgroundSocketWorker_DoWork(object? sender, DoWorkEventArgs e)
         {
             if (_backgroundSocketWorker.CancellationPending == true)
             {
@@ -689,11 +695,11 @@ namespace Playground.ViewModels
             }
             else if (SocketTools.SocketAvailable)
             {
-                SocketTools.SendData(ProcessedValue());
+                SocketTools.SendData(_ProcessedValue());
             }
         }
 
-        private async void BackgroundSocketWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        private async void _BackgroundSocketWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)
             {
@@ -702,7 +708,7 @@ namespace Playground.ViewModels
         }
         #endregion
 
-        private string ProcessReading()
+        private string _ProcessReading()
         {
             if (string.IsNullOrWhiteSpace(LastReceivedValue))
             {
@@ -777,7 +783,7 @@ namespace Playground.ViewModels
             }
         }
 
-        private string ProcessedValue()
+        private string _ProcessedValue()
         {
             if (LastProcessedValue == _invalidValue)
             {
@@ -813,7 +819,7 @@ namespace Playground.ViewModels
                 : _invalidValue;
         }
 
-        private void ValueUpdatedCallback(string value)
+        private void _ValueUpdatedCallback(string value)
         {
             LastReceivedValue = value;
 
@@ -827,7 +833,7 @@ namespace Playground.ViewModels
         #endregion
 
         #region Tasks
-        private async Task ThreadExceptionCallback(CustomException exception)
+        private async Task _ThreadExceptionCallback(CustomException exception)
         {
             LoggingService.WriteLog(LogType.FarfulcrumException, exception.Message);
             ListeningOnSerialPort = false;

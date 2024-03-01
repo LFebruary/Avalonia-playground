@@ -1,10 +1,14 @@
-﻿using System.Diagnostics;
+﻿// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace Playground.Logging
 {
-    internal static partial class Debug
+    internal static partial class CustomDebug
     {
         /// <summary>
         /// Custom debug method that provides additional detail about origin caller and file.

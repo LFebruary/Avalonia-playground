@@ -8,7 +8,7 @@ namespace Playground.Constants
         #region Baud rate
         public static readonly int DefaultBaudRate = 9600;
         public static readonly IList<int> BaudRates = new ReadOnlyCollection<int>(
-            new List<int> {
+            [
                         110,
                         300,
                         600,
@@ -17,17 +17,17 @@ namespace Playground.Constants
                         4800,
                         9600,
                         19200
-            });
+            ]);
         #endregion
 
         #region Databits
         public static readonly int DefaultDatabits = 8;
         public static readonly IList<int> DataBits = new ReadOnlyCollection<int>(
-            new List<int> {
+            [
                 6,
                 7,
                 8
-            });
+            ]);
         #endregion
 
         #region Flow control
@@ -40,15 +40,15 @@ namespace Playground.Constants
 
         #region Parity
         public const string DefaultParity = NoParity;
-        public const string EvenParity    = "Even";
-        public const string OddParity     = "Odd";
-        public const string NoParity      = "None";
+        public const string EvenParity = "Even";
+        public const string OddParity = "Odd";
+        public const string NoParity = "None";
         public static readonly IList<string> ParityValues = new ReadOnlyCollection<string>(
-            new List<string> {
+            [
                 EvenParity,
                 OddParity,
                 NoParity
-            });
+            ]);
         #endregion
 
         #region Scale string
@@ -61,16 +61,16 @@ namespace Playground.Constants
         public const string DefaultStabilityIndicatorSnippet = "ST";
 
         public static readonly int DefaultStabilityIndicatorStartPosition = 1;
-        public static readonly int DefaultIdenticalReadingQuantity        = 5;
+        public static readonly int DefaultIdenticalReadingQuantity = 5;
         #endregion
 
         #region Stop bits
         public static readonly int DefaultStopbits = 1;
         public static readonly IList<int> StopBits = new ReadOnlyCollection<int>(
-            new List<int> {
+            [
                 1,
                 2
-            });
+            ]);
         #endregion
     }
 }

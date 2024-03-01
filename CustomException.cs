@@ -1,12 +1,14 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿// AvaloniaPlayground https://github.com/LFebruary/Avalonia-playground 
+// (c) 2024 Lyle February 
+// Released under the MIT License
+
+using System;
 
 namespace Playground
 {
     /// <summary>
     /// A custom exception class used to wrap *expected* exceptions.
     /// </summary>
-    [Serializable]
     public class CustomException : Exception
     {
         public CustomException()
@@ -18,10 +20,6 @@ namespace Playground
         }
 
         public CustomException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        protected CustomException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
